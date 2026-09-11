@@ -1,0 +1,7 @@
+flask
+pandas
+openpyxl
+requests
+PySide6
+beautifulsoup4
+html5lib

@@ -1,0 +1,14 @@
+# Secrets generated at runtime - never commit these
+aerobull_token.txt
+AeroEdge/token.json
+
+# PyInstaller build output and cache
+build/
+dist/
+*.spec
+__pycache__/
+*.pyc
+
+# The compiled executable is a build artifact, not source - distribute via
+# GitHub Releases or Datto instead of tracking it in the repo
+AeroBull.exe
