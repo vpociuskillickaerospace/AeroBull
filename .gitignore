@@ -12,3 +12,9 @@ __pycache__/
 # The compiled executable is a build artifact, not source - distribute via
 # GitHub Releases or Datto instead of tracking it in the repo
 AeroBull.exe
+
+# AeroEdge's signing key and packed output. The .pem is the private key
+# that proves future rebuilds are "the same" extension to Edge - it must
+# never be committed anywhere, keep it stored securely outside this repo.
+AeroEdge.crx
+AeroEdge.pem
