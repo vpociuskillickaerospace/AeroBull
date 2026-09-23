@@ -684,19 +684,37 @@ document
                         tabId: tab.id
                     },
 
+// Rather than assuming the quote content is always the 3rd frame on the
+// page (fragile - an extra frame, e.g. a first-visit cookie banner, shifts
+// every index after it), search all frames for the one that actually
+// contains a Killick Aerospace RFQ.
+
 					func: () => {
 
-						try {
+						for (const frame of window.frames) {
 
-							return window.frames[2]
-								.document
-								.body
-								.innerHTML
+							try {
 
-						} catch (e) {
+								const html =
+									frame.document.body.innerHTML;
 
-							return "";
+								if (
+									html
+										.toLowerCase()
+										.includes(
+											"quote from killick aerospace for rfq #"
+										)
+								) {
+									return html;
+								}
+
+							} catch (e) {
+
+								continue;
+							}
 						}
+
+						return "";
 					}
 
                 });
