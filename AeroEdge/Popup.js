@@ -682,12 +682,24 @@ document
 
 					func: () => {
 
-						for (const frame of window.frames) {
+						for (
+							let i = 0;
+							i < window.frames.length;
+							i++
+						) {
 
 							try {
 
+								const frame =
+									window.frames[i];
+
+								const body =
+									frame.document.body;
+
 								const html =
-									frame.document.body.innerHTML;
+									body
+										? body.innerHTML
+										: "";
 
 								if (
 									html
@@ -711,8 +723,8 @@ document
                 });
 
             const html =
-                results[0].result;
-				
+                results[0].result || "";
+
 			if (
 				!html
 					.toLowerCase()
