@@ -3,6 +3,8 @@
   "name": "AeroEdge",
   "version": "1.0.1",
 
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtU7l2rABArS66U9mHZUGswwJbhuyDnD1SRczjYYuFNfxkbM4mVCyxAvvIHp7iSE4r8IMFW2qBDO3xW0U3aG3dE588xiGXptGVsO8f/GAsa3QwDTUQdNTubHo6KSSBFFCeB34MFyEoJQXzqMXuG0evYpkRR1j/epujNVYbGkm2deEv4e0RdLe/uRea21YBfEGBgxGvpuZR7+noUt8aV8lpE0Oyg02cwup06UvXXZpQG9Y2lWj1/7Akm8fkpqg0kXjXq2AY78nFM253bSn/KAse6zheLCO89XFcw+RvWzr3SouYIrfXTzO1BqvCirQt1Ta1/thsjWm4LVRekHb3Od3lQIDAQAB",
+
   "icons": {
     "16": "icons/icon-16.png",
     "32": "icons/icon-32.png",
