@@ -48,6 +48,14 @@ from PySide6.QtCore import (
 
 from parser import parse_rotabull
 
+# Single source of truth for the version shown in the app's own footer.
+# Keep this in sync with version_info.txt's FileVersion/ProductVersion
+# (that file drives the version embedded in the compiled .exe itself, which
+# Intune uses for update detection - this constant is what a user actually
+# sees on screen, so bump both together on every release).
+
+APP_VERSION = "1.0.0.2"
+
 # To ensure that saved ppw files are accepted by Windows
 
 def safe_filename(text):
@@ -281,7 +289,7 @@ class AeroBullWindow(QMainWindow):
         right_layout.addSpacing(200)
         
         footer_note = QLabel(
-            "AeroBull version 1.0 BETA. Evaluation version for use by Killick Aerospace only. © Adam Kuitkowski 2026." 
+            f"AeroBull version {APP_VERSION} BETA. Evaluation version for use by Killick Aerospace only. © Adam Kuitkowski 2026."
         )
         footer_note.setStyleSheet("""
             font-size: 8pt;
