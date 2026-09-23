@@ -367,7 +367,10 @@ async function uploadPaperwork(
 			// 2nd iteration: <input type="file" name="file_1" size="50">
 			// 3rd iteration: <input type="file" name="file_2" size="50">
 			// etc
-				if(inputs[ii].getAttribute('type').toLowerCase() =='file'){
+			// Uses the .type property (always a normalized string, defaults to
+			// "text") rather than getAttribute('type'), which returns null for
+			// any input with no explicit type= in its markup and crashes here.
+				if(inputs[ii].type.toLowerCase() =='file'){
 					
 			    fileInput = inputs[ii];
 				
