@@ -14,6 +14,13 @@ const API_BASE = "http://localhost:8765";
 
 const API_TOKEN = "eb2d5fcd3fe32c8e687ce718281c1ea21c5a65364824c094cadae6b8db3a753e";
 
+// Reads the version straight from manifest.json at runtime, so this never
+// needs to be kept in sync by hand the way AeroBull.exe's footer does -
+// there's no separate "build step" resource here to fall out of sync with.
+
+document.getElementById("version").innerText =
+    "v" + chrome.runtime.getManifest().version;
+
 async function apiFetch(path, options = {}) {
 
     const headers = Object.assign(
