@@ -1,0 +1,38 @@
+# UTF-8
+#
+# Windows version resource for AeroBull.exe, embedded via PyInstaller's
+# --version-file flag. Lets Intune (or any deployment tool) detect/compare
+# versions using the file's own FileVersion, instead of tracking a
+# per-build hash by hand.
+#
+# Bump filevers/prodvers/FileVersion/ProductVersion together on each
+# release that should be picked up by version-based detection/supersedence.
+
+VSVersionInfo(
+  ffi=FixedFileInfo(
+    filevers=(1, 0, 0, 0),
+    prodvers=(1, 0, 0, 0),
+    mask=0x3f,
+    flags=0x0,
+    OS=0x40004,
+    fileType=0x1,
+    subtype=0x0,
+    date=(0, 0)
+    ),
+  kids=[
+    StringFileInfo(
+      [
+      StringTable(
+        u'040904B0',
+        [StringStruct(u'CompanyName', u'Killick Aerospace Ltd.'),
+        StringStruct(u'FileDescription', u'AeroBull - Rotabull/Aeroxchange integration tool'),
+        StringStruct(u'FileVersion', u'1.0.0.0'),
+        StringStruct(u'InternalName', u'AeroBull'),
+        StringStruct(u'LegalCopyright', u'© Adam Kuitkowski 2026'),
+        StringStruct(u'OriginalFilename', u'AeroBull.exe'),
+        StringStruct(u'ProductName', u'AeroBull'),
+        StringStruct(u'ProductVersion', u'1.0.0.0')])
+      ]),
+    VarFileInfo([VarStruct(u'Translation', [1033, 1200])])
+  ]
+)
