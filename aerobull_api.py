@@ -1,116 +1,34 @@
 
 #used to get the filepath for downloaded ppw
 import os
-import sys
 import hmac
-import secrets
 
 from flask import Flask, jsonify, request, send_file
 
 app = Flask(__name__)
 
-# Shared secret for the local API. Generated automatically on first run and
-# persisted, so nothing on the machine besides AeroEdge can call the API -
-# without this, any other process or browser tab reaching 127.0.0.1:8765
-# could read quote data, trigger imports, or pull files off disk.
+# Shared secret for the local API, so nothing on the machine besides
+# AeroEdge can call it - without this, any other process or browser tab
+# reaching 127.0.0.1:8765 could read quote data, trigger imports, or pull
+# files off disk.
 #
-# AeroEdge is loaded unpacked straight out of the AeroEdge/ folder next to
-# this file (it isn't installed from the Web Store), so the token is handed
-# to it automatically by writing it into AeroEdge/token.json on every start -
-# no manual pairing step required.
+# This is a FIXED value baked into both this file and AeroEdge/Popup.js at
+# build time, not generated per-install. Earlier this was generated fresh
+# on every AeroBull run and handed to AeroEdge by writing it into a
+# token.json file next to this exe - that only worked while AeroEdge was
+# loaded unpacked from that same folder. Once AeroEdge started being
+# distributed via the Microsoft Edge Add-ons store, that stopped working:
+# a Store-published extension runs from a frozen package Edge manages
+# internally, which AeroBull has no way to write into and which doesn't
+# change after publish - so every user's copy carried a stale/empty token
+# that could never match what AeroBull generated for itself, and every
+# request silently failed with 401 (silently, because the caller wasn't
+# checking the response status - see Popup.js).
+#
+# Rotate this value only by changing it here AND in Popup.js's API_TOKEN
+# together, then rebuilding/republishing both.
 
-import json
-
-# When packaged as a standalone PyInstaller executable, __file__ resolves to
-# a temporary extraction folder that's wiped after the process exits - not
-# where the .exe itself sits. sys.executable is the reliable one there.
-
-if getattr(sys, "frozen", False):
-    APP_DIR = os.path.dirname(sys.executable)
-else:
-    APP_DIR = os.path.dirname(os.path.abspath(__file__))
-
-TOKEN_PATH = os.path.join(APP_DIR, "aerobull_token.txt")
-
-# Some machines run AeroBull from a location the current user can't write to
-# (Program Files, a read-only network share). Fall back to a per-user folder
-# rather than crashing on import before the window even opens.
-
-FALLBACK_TOKEN_PATH = os.path.join(
-    os.getenv(
-        "LOCALAPPDATA",
-        os.path.expanduser("~")
-    ),
-    "AeroBull",
-    "aerobull_token.txt"
-)
-
-EXTENSION_TOKEN_PATH = os.path.join(APP_DIR, "AeroEdge", "token.json")
-
-def _read_token(path):
-
-    if os.path.exists(path):
-
-        with open(path, "r") as f:
-
-            existing = f.read().strip()
-
-            if existing:
-                return existing
-
-    return None
-
-def _load_or_create_token():
-
-    existing = (
-        _read_token(TOKEN_PATH)
-        or _read_token(FALLBACK_TOKEN_PATH)
-    )
-
-    if existing:
-        return existing
-
-    token = secrets.token_hex(32)
-
-    try:
-
-        with open(TOKEN_PATH, "w") as f:
-            f.write(token)
-
-    except OSError as e:
-
-        print(
-            "Couldn't write token next to aerobull_api.py "
-            f"({e}); using per-user folder instead."
-        )
-
-        os.makedirs(
-            os.path.dirname(FALLBACK_TOKEN_PATH),
-            exist_ok=True
-        )
-
-        with open(FALLBACK_TOKEN_PATH, "w") as f:
-            f.write(token)
-
-    return token
-
-def _publish_token_to_extension(token):
-
-    try:
-
-        with open(EXTENSION_TOKEN_PATH, "w") as f:
-            json.dump({"token": token}, f)
-
-    except OSError as e:
-
-        print(
-            "Couldn't write AeroEdge/token.json "
-            f"({e}); AeroEdge won't be able to authenticate "
-            "until this folder is writable."
-        )
-
-API_TOKEN = _load_or_create_token()
-_publish_token_to_extension(API_TOKEN)
+API_TOKEN = "eb2d5fcd3fe32c8e687ce718281c1ea21c5a65364824c094cadae6b8db3a753e"
 
 @app.before_request
 def require_token():

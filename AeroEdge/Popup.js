@@ -1,58 +1,46 @@
 
 const API_BASE = "http://localhost:8765";
 
-// AeroBull requires every request to carry a shared secret, so a stray
-// webpage or process on the same machine can't poke the local API. AeroBull
-// writes that secret into token.json (bundled next to this script) on every
-// start, so it's picked up here with no pairing step needed.
+// AeroBull requires every request to carry this shared secret, so a stray
+// webpage or process on the same machine can't poke the local API. This is
+// a FIXED value matching aerobull_api.py's API_TOKEN, baked in at build
+// time rather than handed over at runtime - AeroEdge is distributed via
+// the Microsoft Edge Add-ons store, which runs from a frozen package Edge
+// manages internally, so there's no on-disk location AeroBull could write
+// a fresh per-install token into that this extension could read back.
+//
+// Rotate this only by changing it here AND in aerobull_api.py's API_TOKEN
+// together, then rebuilding/republishing both.
 
-let cachedToken = null;
-
-async function getToken() {
-
-    if (cachedToken !== null) {
-        return cachedToken;
-    }
-
-    try {
-
-        const response =
-            await fetch(
-                chrome.runtime.getURL(
-                    "token.json"
-                )
-            );
-
-        const data = await response.json();
-
-        cachedToken = data.token || "";
-
-    } catch (err) {
-
-        cachedToken = "";
-    }
-
-    return cachedToken;
-}
+const API_TOKEN = "eb2d5fcd3fe32c8e687ce718281c1ea21c5a65364824c094cadae6b8db3a753e";
 
 async function apiFetch(path, options = {}) {
-
-    const token = await getToken();
 
     const headers = Object.assign(
         {},
         options.headers || {},
-        { "X-AeroBull-Token": token }
+        { "X-AeroBull-Token": API_TOKEN }
     );
 
-    return fetch(
-        API_BASE + path,
-        Object.assign(
-            {},
-            options,
-            { headers }
-        )
-    );
+    const response =
+        await fetch(
+            API_BASE + path,
+            Object.assign(
+                {},
+                options,
+                { headers }
+            )
+        );
+
+    if (!response.ok) {
+
+        throw new Error(
+            `AeroBull API error: ${response.status} ` +
+            `${response.statusText}`
+        );
+    }
+
+    return response;
 }
 
 document
